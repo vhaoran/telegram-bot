@@ -1,0 +1,7 @@
+            raw.forward_date,
+            &raw.forward_from,
+            &raw.forward_from_chat,
+            raw.forward_from_message_id,
+            &raw.forward_sender_name,
+
+
