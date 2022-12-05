@@ -25,7 +25,7 @@ pub struct UpdatesStream {
     last_update: Integer,
     buffer: VecDeque<Update>,
     current_request:
-        Option<Pin<Box<dyn Future<Output = Result<Option<Vec<Update>>, Error>> + Send>>>,
+    Option<Pin<Box<dyn Future<Output=Result<Option<Vec<Update>>, Error>> + Send>>>,
     timeout: Duration,
     allowed_updates: Vec<AllowedUpdate>,
     limit: Integer,
@@ -74,6 +74,7 @@ impl Stream for UpdatesStream {
                     }
                     Poll::Ready(Ok(Some(updates))) => {
                         for update in updates {
+                            //todo
                             tracing::trace!(update = ?update, "processing update");
                             ref_mut.last_update = max(update.id, ref_mut.last_update);
                             tracing::trace!(last_update = ref_mut.last_update);

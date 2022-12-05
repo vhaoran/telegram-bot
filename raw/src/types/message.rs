@@ -237,7 +237,7 @@ impl Message {
         let message_thread_id = raw.message_thread_id;
         let forum_topic_created = raw.forum_topic_created.clone();
 
-        //end bywhr
+        //end by whr
         let chat = match raw.chat.clone() {
             Chat::Private(x) => MessageChat::Private(x),
             Chat::Group(x) => MessageChat::Group(x),

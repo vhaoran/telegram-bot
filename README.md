@@ -1,7 +1,7 @@
 Rust Telegram Bot Library
 =========================
 
-*lying on telegram-bot
+
 
 
 [![Build Status](https://img.shields.io/travis/telegram-rs/telegram-bot/master.svg)](https://travis-ci.org/telegram-rs/telegram-bot)
@@ -19,6 +19,8 @@ Rust Telegram Bot Library
     </tr>
   </tbody>
 </table>
+
+## lying on telegram-bot
 
 A library for writing your own [Telegram](https://telegram.org/) bots. More information [here](https://core.telegram.org/bots). Official API [here](https://core.telegram.org/bots/api).
 
