@@ -84,18 +84,18 @@ async fn main() -> Result<(), Error> {
                 _ => (),
             },
             UpdateKind::Poll(Poll {
-                total_voter_count,
-                id,
-                ..
-            }) => println!(
+                                 total_voter_count,
+                                 id,
+                                 ..
+                             }) => println!(
                 "Poll update - {} with total voters {}",
                 id, total_voter_count
             ),
             UpdateKind::PollAnswer(PollAnswer {
-                poll_id,
-                user: User { first_name, .. },
-                option_ids,
-            }) => println!(
+                                       poll_id,
+                                       user: User { first_name, .. },
+                                       option_ids,
+                                   }) => println!(
                 "In poll {} {} voted for {:?}",
                 poll_id, first_name, option_ids
             ),

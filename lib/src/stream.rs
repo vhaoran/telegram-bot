@@ -45,6 +45,8 @@ impl Stream for UpdatesStream {
 
         tracing::trace!("start stream polling");
 
+        // if buffer exist data
+        // then return  first element
         if let Some(value) = ref_mut.buffer.pop_front() {
             tracing::trace!(update = ?value, "returning buffered update");
             return Poll::Ready(Some(Ok(value)));
@@ -53,11 +55,13 @@ impl Stream for UpdatesStream {
 
         let result = match ref_mut.current_request {
             None => {
+                //当前没有请求，则返回None
                 tracing::trace!("there is no current request");
                 Ok(false)
             }
             Some(ref mut current_request) => {
                 let cc = current_request.as_mut();
+                //请求数据
                 let polled_update = cc.poll(cx);
                 match polled_update {
                     Poll::Pending => {
@@ -65,10 +69,12 @@ impl Stream for UpdatesStream {
                         return Poll::Pending;
                     }
                     Poll::Ready(Ok(None)) => {
+                        //完成 且无数据 (无vec)
                         tracing::trace!("request timed out");
                         Ok(false)
                     }
                     Poll::Ready(Ok(Some(ref updates))) if updates.is_empty() => {
+                        //完成 且有vec（vec.len == 0）
                         tracing::trace!("request resolved to empty update list");
                         Ok(false)
                     }
@@ -78,12 +84,14 @@ impl Stream for UpdatesStream {
                             tracing::trace!(update = ?update, "processing update");
                             ref_mut.last_update = max(update.id, ref_mut.last_update);
                             tracing::trace!(last_update = ref_mut.last_update);
+                            //获取到数据之后，把数据放入buffer
                             ref_mut.buffer.push_back(update)
                         }
 
                         Ok(true)
                     }
                     Poll::Ready(Err(err)) => {
+                        //就绪，但出错
                         tracing::error!(error = %err, "request error");
                         Err(err)
                     }
