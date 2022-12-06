@@ -8,6 +8,9 @@ use crate::types::*;
 #[must_use = "requests do nothing unless sent"]
 pub struct SendAudio<'c, 'p, 't> {
     chat_id: ChatRef,
+    // whr
+    message_thread_id: Option<Integer>,
+
     audio: InputFile,
     caption: Option<Cow<'c, str>>,
     parse_mode: Option<ParseMode>,
@@ -56,6 +59,8 @@ impl<'c, 'p, 't> SendAudio<'c, 'p, 't> {
     {
         Self {
             chat_id: chat.to_chat_ref(),
+            //whr
+            message_thread_id: None,
             audio: audio.into(),
             caption: None,
             parse_mode: None,
@@ -67,6 +72,16 @@ impl<'c, 'p, 't> SendAudio<'c, 'p, 't> {
             reply_markup: None,
             disable_notification: false,
         }
+    }
+
+    pub fn message_thread_id(&mut self, message_thread_id: Integer) -> &mut Self {
+        self.message_thread_id = Some(message_thread_id);
+        self
+    }
+
+    pub fn message_thread_id_opt(&mut self, message_thread_id: Option<Integer>) -> &mut Self {
+        self.message_thread_id = message_thread_id;
+        self
     }
 
     pub fn thumb<V>(&mut self, thumb: V) -> &mut Self

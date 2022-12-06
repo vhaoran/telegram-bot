@@ -10,6 +10,10 @@ use crate::types::*;
 pub struct SendMessage<'s> {
     chat_id: ChatRef,
     text: Cow<'s, str>,
+
+    // whr
+    message_thread_id: Option<Integer>,
+
     #[serde(skip_serializing_if = "Option::is_none")]
     parse_mode: Option<ParseMode>,
     #[serde(skip_serializing_if = "Not::not")]
@@ -45,11 +49,26 @@ impl<'s> SendMessage<'s> {
             disable_notification: false,
             reply_to_message_id: None,
             reply_markup: None,
+            //whr
+            message_thread_id: None,
         }
     }
 
     pub fn parse_mode(&mut self, parse_mode: ParseMode) -> &mut Self {
         self.parse_mode = Some(parse_mode);
+        self
+    }
+
+
+    pub fn message_thread_id_opt(&mut self, message_thread_id: Option<Integer>) -> &mut Self {
+        self.message_thread_id = message_thread_id;
+        self
+    }
+
+
+
+    pub fn message_thread_id(&mut self, message_thread_id: Integer) -> &mut Self {
+        self.message_thread_id = Some(message_thread_id);
         self
     }
 

@@ -9,6 +9,7 @@ use crate::types::*;
 #[must_use = "requests do nothing unless sent"]
 pub struct EditMessageText<'s> {
     chat_id: ChatRef,
+
     message_id: MessageId,
     text: Cow<'s, str>,
     #[serde(skip_serializing_if = "Option::is_none")]

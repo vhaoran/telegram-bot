@@ -8,6 +8,9 @@ use crate::types::*;
 #[must_use = "requests do nothing unless sent"]
 pub struct SendLocation {
     chat_id: ChatRef,
+    // whr
+    message_thread_id: Option<Integer>,
+
     latitude: Float,
     longitude: Float,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -36,6 +39,8 @@ impl SendLocation {
     {
         SendLocation {
             chat_id: chat.to_chat_ref(),
+            //whr
+            message_thread_id: None,
             latitude: latitude,
             longitude: longitude,
             live_period: None,
@@ -55,6 +60,18 @@ impl SendLocation {
         self.disable_notification = true;
         self
     }
+
+    pub fn message_thread_id_opt(&mut self, message_thread_id: Option<Integer>) -> &mut Self {
+        self.message_thread_id = message_thread_id;
+        self
+    }
+
+
+    pub fn message_thread_id(&mut self, message_thread_id: Integer) -> &mut Self {
+        self.message_thread_id = Some(message_thread_id);
+        self
+    }
+
 
     pub fn reply_to<R>(&mut self, to: R) -> &mut Self
     where

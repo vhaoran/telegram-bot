@@ -9,6 +9,9 @@ use crate::types::*;
 #[must_use = "requests do nothing unless sent"]
 pub struct SendContact<'p, 'f, 'l> {
     chat_id: ChatRef,
+    // whr
+    message_thread_id: Option<Integer>,
+
     phone_number: Cow<'p, str>,
     first_name: Cow<'f, str>,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -39,6 +42,8 @@ impl<'p, 'f, 'l> SendContact<'p, 'f, 'l> {
     {
         SendContact {
             chat_id: chat.to_chat_ref(),
+            //whr
+            message_thread_id: None,
             phone_number: phone_number.into(),
             first_name: first_name.into(),
             last_name: None,
@@ -46,6 +51,16 @@ impl<'p, 'f, 'l> SendContact<'p, 'f, 'l> {
             reply_to_message_id: None,
             reply_markup: None,
         }
+    }
+    pub fn message_thread_id(&mut self, message_thread_id: Integer) -> &mut Self {
+        self.message_thread_id = Some(message_thread_id);
+        self
+    }
+
+
+    pub fn message_thread_id_opt(&mut self, message_thread_id: Option<Integer>) -> &mut Self {
+        self.message_thread_id = message_thread_id;
+        self
     }
 
     pub fn last_name<F>(&mut self, last_name: F) -> &mut Self

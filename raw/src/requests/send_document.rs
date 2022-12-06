@@ -9,6 +9,9 @@ use crate::types::*;
 #[must_use = "requests do nothing unless sent"]
 pub struct SendDocument<'c> {
     chat_id: ChatRef,
+    // whr
+    message_thread_id: Option<Integer>,
+
     document: InputFile,
     thumb: Option<InputFile>,
     caption: Option<Cow<'c, str>>,
@@ -49,8 +52,10 @@ impl<'c> SendDocument<'c> {
         C: ToChatRef,
         V: Into<InputFile>,
     {
-        Self {
+        let document1 = Self {
             chat_id: chat.to_chat_ref(),
+            //whr
+            message_thread_id: None,
             document: document.into(),
             thumb: None,
             caption: None,
@@ -58,7 +63,8 @@ impl<'c> SendDocument<'c> {
             reply_to_message_id: None,
             reply_markup: None,
             disable_notification: false,
-        }
+        };
+        document1
     }
 
     pub fn thumb<V>(&mut self, thumb: V) -> &mut Self
@@ -68,6 +74,17 @@ impl<'c> SendDocument<'c> {
         self.thumb = Some(thumb.into().into());
         self
     }
+
+    pub fn message_thread_id_opt(&mut self, message_thread_id: Option<Integer>) -> &mut Self {
+        self.message_thread_id = message_thread_id;
+        self
+    }
+
+    pub fn message_thread_id(&mut self, message_thread_id: Integer) -> &mut Self {
+        self.message_thread_id = Some(message_thread_id);
+        self
+    }
+
 
     pub fn caption<T>(&mut self, caption: T) -> &mut Self
     where

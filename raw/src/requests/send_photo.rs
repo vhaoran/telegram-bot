@@ -8,6 +8,10 @@ use crate::types::*;
 #[must_use = "requests do nothing unless sent"]
 pub struct SendPhoto<'c> {
     chat_id: ChatRef,
+
+    // whr
+    message_thread_id: Option<Integer>,
+
     photo: InputFile,
     caption: Option<Cow<'c, str>>,
     parse_mode: Option<ParseMode>,
@@ -48,6 +52,8 @@ impl<'c> SendPhoto<'c> {
     {
         Self {
             chat_id: chat.to_chat_ref(),
+            //whr
+            message_thread_id: None,
             photo: photo.into(),
             caption: None,
             parse_mode: None,
@@ -62,6 +68,19 @@ impl<'c> SendPhoto<'c> {
         T: Into<Cow<'c, str>>,
     {
         self.caption = Some(caption.into());
+        self
+    }
+
+
+    pub fn message_thread_id_opt(&mut self, message_thread_id: Option<Integer>) -> &mut Self {
+        self.message_thread_id = message_thread_id;
+        self
+    }
+
+
+    //whr
+    pub fn message_thread_id(&mut self, message_thread_id: Integer) -> &mut Self {
+        self.message_thread_id = Some(message_thread_id);
         self
     }
 

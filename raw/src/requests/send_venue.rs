@@ -9,6 +9,9 @@ use crate::types::*;
 #[must_use = "requests do nothing unless sent"]
 pub struct SendVenue<'t, 'a, 'f> {
     chat_id: ChatRef,
+    // whr
+    message_thread_id: Option<Integer>,
+
     latitude: Float,
     longitude: Float,
     title: Cow<'t, str>,
@@ -41,6 +44,8 @@ impl<'t, 'a, 'f> SendVenue<'t, 'a, 'f> {
     {
         SendVenue {
             chat_id: chat.to_chat_ref(),
+            //whr
+            message_thread_id: None,
             latitude: latitude,
             longitude: longitude,
             title: title.into(),
@@ -51,6 +56,18 @@ impl<'t, 'a, 'f> SendVenue<'t, 'a, 'f> {
             reply_markup: None,
         }
     }
+    pub fn message_thread_id(&mut self, message_thread_id: Integer) -> &mut Self {
+        self.message_thread_id = Some(message_thread_id);
+        self
+    }
+
+
+
+    pub fn message_thread_id_opt(&mut self, message_thread_id: Option<Integer>) -> &mut Self {
+        self.message_thread_id = message_thread_id;
+        self
+    }
+
 
     pub fn disable_notification(&mut self) -> &mut Self {
         self.disable_notification = true;

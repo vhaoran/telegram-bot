@@ -30,6 +30,7 @@ pub struct Group {
     pub id: GroupId,
     //add by whr
     is_forum: Option<bool>,
+    active_usernames: Option<Vec<String>>,
 
     /// Title, for supergroups, channels and group chats.
     pub title: String,
@@ -47,8 +48,9 @@ pub struct Supergroup {
     /// Unique identifier for this chat.
     pub id: SupergroupId,
     //add by whr
-    is_forum: Option<bool>,
-
+    pub is_forum: Option<bool>,
+    pub active_usernames: Option<Vec<String>>,
+    //end
     /// Title, for supergroups, channels and group chats.
     pub title: String,
     /// Username for supergroup.
@@ -67,7 +69,8 @@ pub struct Channel {
     /// Unique identifier for this chat.
     pub id: ChannelId,
     //add by whr
-    is_forum: Option<bool>,
+    pub is_forum: Option<bool>,
+    pub active_usernames: Option<Vec<String>>,
 
     /// Title, for supergroups, channels and group chats.
     pub title: String,
@@ -154,6 +157,7 @@ impl<'de> Deserialize<'de> for Chat {
             "group" => Chat::Group(Group {
                 id: raw.id.into(),
                 is_forum: raw.is_forum,
+                active_usernames: None,
                 title: required_field!(title),
                 all_members_are_administrators: required_field!(all_members_are_administrators),
                 invite_link: raw.invite_link,
@@ -161,6 +165,7 @@ impl<'de> Deserialize<'de> for Chat {
             "supergroup" => Chat::Supergroup(Supergroup {
                 id: raw.id.into(),
                 is_forum: raw.is_forum,
+                active_usernames: None,
                 title: required_field!(title),
                 username: raw.username,
                 invite_link: raw.invite_link,
@@ -169,6 +174,7 @@ impl<'de> Deserialize<'de> for Chat {
             "channel" => Chat::Channel(Channel {
                 id: raw.id.into(),
                 is_forum: raw.is_forum,
+                active_usernames: None,
                 title: required_field!(title),
                 username: raw.username,
                 invite_link: raw.invite_link,
@@ -185,7 +191,8 @@ pub struct RawChat {
     /// Unique identifier for this chat.
     pub id: Integer,
     //add by whr
-    is_forum: Option<bool>,
+    pub is_forum: Option<bool>,
+    pub active_usernames: Option<Vec<String>>,
 
     /// Type of chat, can be either “private”, “group”, “supergroup” or “channel”
     #[serde(rename = "type")]
