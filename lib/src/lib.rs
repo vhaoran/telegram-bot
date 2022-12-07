@@ -10,6 +10,7 @@ pub mod connector;
 pub mod prelude;
 pub mod types;
 pub mod util;
+mod test_stream;
 
 pub use self::api::Api;
 pub use self::errors::Error;
