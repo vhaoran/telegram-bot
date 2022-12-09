@@ -1,6 +1,6 @@
 use crate::Integer;
 // use chrono::{DateTime, Utc};
-use serde::{Deserialize, Serialize};
+use serde::{Deserialize, };
 
 use crate::types::{Chat, ChatInviteLink, User};
 
