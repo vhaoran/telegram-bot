@@ -17,9 +17,12 @@ pub mod response_parameters;
 pub mod shipping_query;
 pub mod text;
 pub mod update;
+//-------------------------------------
+pub mod chat_administrator;
 
 pub use self::callback_query::*;
 pub use self::chat::*;
+pub use self::chat_administrator::*;
 pub use self::chat_invite_link::*;
 pub use self::chat_member::*;
 pub use self::chat_member_update::*;
