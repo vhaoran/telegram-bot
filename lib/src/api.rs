@@ -5,6 +5,7 @@ use std::sync::{
 use std::time::Duration;
 
 use futures::{Future, FutureExt};
+use log::debug;
 use tokio::time::timeout;
 use tracing_futures::Instrument;
 
@@ -127,6 +128,8 @@ impl Api {
     {
         let api = self.clone();
         let request = request.serialize();
+        debug!("--req: {request:#?}-------");
+
         async move {
             match timeout(
                 duration,
@@ -164,6 +167,9 @@ impl Api {
     ) -> impl Future<Output = Result<<Req::Response as ResponseType>::Type, Error>> + Send {
         let api = self.clone();
         let request = request.serialize();
+
+        debug!("--send_req: {request:#?}-------");
+
         async move {
             api.send_http_request::<Req::Response>(request.map_err(ErrorKind::from)?)
                 .await
@@ -174,7 +180,12 @@ impl Api {
         &self,
         request: HttpRequest,
     ) -> Result<Resp::Type, Error> {
+        debug!("--http_req: {request:#?}-------");
+
         let request_id = self.0.next_request_id.fetch_add(1, Ordering::Relaxed);
+        debug!("--request_id: {request_id:#?}-------");
+
+
         let span = tracing::trace_span!("send_http_request", request_id = request_id);
         async {
             tracing::trace!(name = %request.name(), body = %request.body, "sending request");

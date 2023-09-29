@@ -1,3 +1,4 @@
+use log::debug;
 use std::io::{Cursor, Read};
 use std::path::Path;
 use std::pin::Pin;
@@ -45,6 +46,8 @@ impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector for
         req: HttpRequest,
     ) -> Pin<Box<dyn Future<Output = Result<HttpResponse, Error>> + Send>> {
         let uri = Uri::from_str(&req.url.url(token));
+        debug!("--url: {uri:#?}-------");
+
         let client = self.0.clone();
 
         let future = async move {
