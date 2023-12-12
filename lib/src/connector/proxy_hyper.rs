@@ -19,6 +19,7 @@ use hyper_rustls::HttpsConnector;
 #[cfg(feature = "openssl")]
 use hyper_tls::HttpsConnector;
 
+use crate::connector::test_proxy::{proxy_exec, ProxyCfg};
 use hyper::client::HttpConnector;
 use multipart::client::lazy::Multipart;
 use telegram_bot_raw::{
@@ -29,30 +30,32 @@ use super::Connector;
 use crate::errors::{Error, ErrorKind};
 
 #[derive(Debug)]
-pub struct HyperConnector<C>(Client<C>);
+pub struct ProxyHyperConnector<C>(Client<C>, ProxyCfg);
 
 enum MultipartTemporaryValue {
     Text(Text),
     Data { file_name: Text, data: Bytes },
 }
 
-impl<C> HyperConnector<C> {
-    pub fn new(client: Client<C>) -> Self {
-        HyperConnector(client)
+impl<C> ProxyHyperConnector<C> {
+    pub fn new(client: Client<C>, proxy_cfg: ProxyCfg) -> Self {
+        ProxyHyperConnector(client, proxy_cfg)
     }
 }
 
-impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector for HyperConnector<C> {
+impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector
+    for ProxyHyperConnector<C>
+{
     fn request(
         &self,
         token: &str,
         req: HttpRequest,
     ) -> Pin<Box<dyn Future<Output = Result<HttpResponse, Error>> + Send>> {
         let uri = Uri::from_str(&req.url.url(token));
-        debug!("--url: {uri:#?}-------");
+        debug!("--req_url: {uri:#?}-------");
 
-        let client = self.0.clone();
-
+        // let client = self.0.clone();
+        let proxy_cfg = self.1.clone();
         let future = async move {
             let uri = uri.map_err(HttpError::from).map_err(ErrorKind::from)?;
 
@@ -145,8 +148,15 @@ impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector for
                 body => panic!("Unknown body type {:?}", body),
             }
             .map_err(ErrorKind::from)?;
+            debug!("----------raw_req: {request:?}-----------",);
+            // let response = client.request(request).await.map_err(ErrorKind::from)?;
+            let response = proxy_exec(proxy_cfg, request)
+                .await
+                .map_err(|x| x.to_string())
+                .map_err(ErrorKind::from)?;
 
-            let response = client.request(request).await.map_err(ErrorKind::from)?;
+            // debug!("----------after exec_proxy-{request:?}-----------",);
+
             let whole_chunk = to_bytes(response.into_body()).await;
 
             let body = whole_chunk
@@ -156,60 +166,33 @@ impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector for
                     acc
                 });
 
+            {
+                match String::from_utf8(body.clone()) {
+                    Ok(s) => {
+                        debug!("--raw_body: {s}-------");
+                    }
+                    _ => {}
+                }
+            }
+
             Ok::<HttpResponse, Error>(HttpResponse { body: Some(body) })
         };
+        let proxy_cfg = self.1.clone();
+        // debug!("--req_proxy_cfg: {proxy_cfg:?}-------");
 
         future.boxed()
     }
 }
 
-pub fn default_connector() -> Result<Box<dyn Connector>, Error> {
+pub fn proxy_connector(proxy_cfg: ProxyCfg) -> Result<Box<dyn Connector>, Error> {
     #[cfg(feature = "rustls")]
     let connector = HttpsConnector::with_native_roots();
 
     #[cfg(feature = "openssl")]
     let connector = HttpsConnector::new();
-
-    Ok(Box::new(HyperConnector::new(
+    // debug!("--enter_proxy_connector-------");
+    Ok(Box::new(ProxyHyperConnector::new(
         Client::builder().build(connector),
+        proxy_cfg,
     )))
-}
-
-pub fn proxy_connector_of_https(proxy_uri: &str) -> Result<Box<dyn Connector>, String> {
-    // #[cfg(feature = "rustls")]
-    // let connector = HttpsConnector::with_native_roots();
-    //
-    // #[cfg(feature = "openssl")]
-    // let connector = HttpsConnector::new();
-    let proxy_uri = proxy_uri.parse();
-    if proxy_uri.is_err() {
-        error!("--hyper.rs: {:?}-------", proxy_uri.unwrap_err());
-        return Err("".to_string());
-    }
-
-    let proxy_uri = proxy_uri.unwrap();
-
-    let mut proxy = Proxy::new(Intercept::All, proxy_uri);
-    // proxy.set_authorization(Authorization::basic("John Doe", "Agent1234"));
-    // #[cfg(feature = "rustls")]
-    // let connector = HttpConnector::with_native_roots();
-    //
-    // #[cfg(feature = "openssl")]
-    // let connector = HttpConnector::new();
-    let connector = HttpConnector::new();
-
-    // let connector = HttpsConnector::new();
-    let proxy_connector = ProxyConnector::from_proxy(connector, proxy);
-    if proxy_connector.is_err() {
-        error!("--hyper.rs: {:?}-------", proxy_connector.unwrap_err());
-        return Err("".to_string());
-    }
-    let proxy_connector = proxy_connector.unwrap();
-    // if let Some(headers) = proxy.http_headers(&uri) {
-    //     debug!("--proxy_header: {headers:#?}-------");
-    // }
-
-    let mut c = Client::builder().build(proxy_connector);
-
-    Ok(Box::new(HyperConnector::new(c)))
 }

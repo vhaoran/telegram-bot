@@ -1,6 +1,8 @@
 //! Connector with hyper backend.
 
 pub mod hyper;
+pub mod test_proxy;
+pub mod proxy_hyper;
 
 use std::fmt::Debug;
 use std::pin::Pin;

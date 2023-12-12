@@ -11,11 +11,17 @@ pub(crate) enum ErrorKind {
     Http(hyper::http::Error),
     Io(std::io::Error),
     InvalidMultipartFilename,
+    RawStr(String),
 }
 
 impl From<telegram_bot_raw::Error> for ErrorKind {
     fn from(error: telegram_bot_raw::Error) -> Self {
         ErrorKind::Raw(error)
+    }
+}
+impl From<String> for ErrorKind {
+    fn from(error: String) -> Self {
+        ErrorKind::RawStr(error)
     }
 }
 
@@ -51,6 +57,7 @@ impl fmt::Display for Error {
             ErrorKind::Http(error) => write!(f, "{}", error),
             ErrorKind::Io(error) => write!(f, "{}", error),
             ErrorKind::InvalidMultipartFilename => write!(f, "invalid multipart filename"),
+            ErrorKind::RawStr(err_str) => write!(f, "{}", err_str),
         }
     }
 }

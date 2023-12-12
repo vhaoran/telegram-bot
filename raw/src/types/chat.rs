@@ -3,7 +3,7 @@ use serde::de::{Deserialize, Deserializer, Error};
 use crate::types::*;
 
 /// This object represents a Telegram user or bot.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize, Serialize)]
 pub struct User {
     /// Unique identifier for this user or bot.
     pub id: UserId,
@@ -89,6 +89,7 @@ pub struct Channel {
 pub enum MessageChat {
     Private(User),
     Group(Group),
+    // Channel(Channel),
     Supergroup(Supergroup),
     #[doc(hidden)]
     Unknown(RawChat),
@@ -99,6 +100,7 @@ impl MessageChat {
         match *self {
             MessageChat::Private(ref x) => x.id.into(),
             MessageChat::Group(ref x) => x.id.into(),
+            // MessageChat::Channel(ref x) => x.id.into(),
             MessageChat::Supergroup(ref x) => x.id.into(),
             MessageChat::Unknown(ref x) => x.id.into(),
         }

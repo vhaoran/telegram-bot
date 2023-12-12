@@ -19,6 +19,11 @@ pub mod text;
 pub mod update;
 //-------------------------------------
 pub mod chat_administrator;
+mod input_media;
+mod input_file_x;
+pub use input_file_x::*;
+
+pub use input_media::*;
 
 pub use self::callback_query::*;
 pub use self::chat::*;

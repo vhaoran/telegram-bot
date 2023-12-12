@@ -1,4 +1,6 @@
 use serde::de::{Deserialize, Deserializer, Error};
+use serde::ser::SerializeStruct;
+use serde::{Serialize, Serializer};
 
 use crate::types::*;
 use crate::url::*;
@@ -107,6 +109,8 @@ pub enum MessageKind {
     Audio {
         /// Information about the file.
         data: Audio,
+        caption: Option<String>,
+        media_group_id: Option<String>,
     },
     /// Message is a general file.
     Document {
@@ -114,6 +118,7 @@ pub enum MessageKind {
         data: Document,
         /// Caption for the document, 0-200 characters.
         caption: Option<String>,
+        media_group_id: Option<String>,
     },
     /// Message is a photo.
     Photo {
@@ -393,8 +398,11 @@ impl Message {
             });
         }
 
-        maybe_field!(audio, Audio);
-        maybe_field_with_caption!(document, Document);
+        //old maybe_field!(audio, Audio);
+        //new
+        maybe_field_with_caption_and_group!(audio, Audio);
+        //old maybe_field_with_caption!(document, Document);
+        maybe_field_with_caption_and_group!(document, Document);
         maybe_field_with_caption_and_group!(photo, Photo);
         maybe_field!(sticker, Sticker);
         maybe_field_with_caption_and_group!(video, Video);
@@ -547,8 +555,10 @@ impl ChannelPost {
             });
         }
 
-        maybe_field!(audio, Audio);
-        maybe_field_with_caption!(document, Document);
+        // maybe_field!(audio, Audio);
+        maybe_field_with_caption_and_group!(audio, Audio);
+        //old maybe_field_with_caption!(document, Document);
+        maybe_field_with_caption_and_group!(document, Document);
         maybe_field_with_caption_and_group!(photo, Photo);
         maybe_field!(sticker, Sticker);
         maybe_field_with_caption_and_group!(video, Video);
@@ -723,7 +733,8 @@ pub struct MessageEntity {
 }
 
 /// Kind of the entity.
-#[derive(Debug, Clone, PartialEq, PartialOrd)]
+// #[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 pub enum MessageEntityKind {
     Mention,
     Hashtag,
@@ -731,6 +742,7 @@ pub enum MessageEntityKind {
     Url,
     Email,
     Bold,
+    Underline,
     Italic,
     Code,
     Pre,
@@ -768,6 +780,7 @@ impl<'de> Deserialize<'de> for MessageEntity {
             "url" => Url,
             "email" => Email,
             "bold" => Bold,
+            "underline" => Underline,
             "italic" => Italic,
             "code" => Code,
             "pre" => Pre,
@@ -784,9 +797,59 @@ impl<'de> Deserialize<'de> for MessageEntity {
     }
 }
 
+impl Serialize for MessageEntity {
+    fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        let mut state = serializer.serialize_struct("bold", 3)?;
+        state.serialize_field("offset", &self.offset)?;
+        state.serialize_field("length", &self.length)?;
+
+        match self.kind {
+            MessageEntityKind::Bold => {
+                state.serialize_field("type", "bold")?;
+                state.end()
+            }
+            MessageEntityKind::Underline => {
+                state.serialize_field("type", "underline")?;
+                state.end()
+            }
+            MessageEntityKind::BotCommand => {
+                state.serialize_field("type", "bot_command")?;
+                state.end()
+            }
+            MessageEntityKind::Code => {
+                state.serialize_field("type", "code")?;
+                state.end()
+            }
+            MessageEntityKind::Email => {
+                state.serialize_field("type", "email")?;
+                state.end()
+            }
+            MessageEntityKind::Hashtag => {
+                state.serialize_field("type", "hashtag")?;
+                state.end()
+            }
+            MessageEntityKind::Italic => {
+                state.serialize_field("type", "italic")?;
+                state.end()
+            }
+            MessageEntityKind::Mention => {
+                state.serialize_field("type", "mention")?;
+                state.end()
+            }
+            _ => {
+                state.serialize_field("unknow", &self.kind)?;
+                state.end()
+            }
+        }
+    }
+}
+
 /// This object represents one special entity in a text message.
 /// For example, hashtags, usernames, URLs, etc. Directly mapped.
-#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize, Serialize)]
 pub struct RawMessageEntity {
     /// Type of the entity. Can be mention (@username), hashtag, bot_command, url, email,
     /// bold (bold text), italic (italic text), code (monowidth string), pre (monowidth block),

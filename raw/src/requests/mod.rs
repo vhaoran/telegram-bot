@@ -36,6 +36,8 @@ pub mod stop_message_live_location;
 pub mod stop_poll;
 pub mod unban_chat_member;
 pub mod unpin_chat_message;
+mod send_media_group;
+pub use send_media_group::*;
 
 pub use self::_base::*;
 pub use self::answer_callback_query::*;

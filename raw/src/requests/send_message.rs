@@ -11,6 +11,8 @@ pub struct SendMessage<'s> {
     chat_id: ChatRef,
     text: Cow<'s, str>,
 
+    entities: Vec<MessageEntity>,
+
     // whr
     message_thread_id: Option<Integer>,
 
@@ -51,6 +53,7 @@ impl<'s> SendMessage<'s> {
             reply_markup: None,
             //whr
             message_thread_id: None,
+            entities: vec![],
         }
     }
 
@@ -58,14 +61,15 @@ impl<'s> SendMessage<'s> {
         self.parse_mode = Some(parse_mode);
         self
     }
-
+    pub fn entities(&mut self, entities: Vec<MessageEntity>) -> &mut Self {
+        self.entities = entities;
+        self
+    }
 
     pub fn message_thread_id_opt(&mut self, message_thread_id: Option<Integer>) -> &mut Self {
         self.message_thread_id = message_thread_id;
         self
     }
-
-
 
     pub fn message_thread_id(&mut self, message_thread_id: Integer) -> &mut Self {
         self.message_thread_id = Some(message_thread_id);
