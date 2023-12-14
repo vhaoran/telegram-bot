@@ -1,5 +1,5 @@
 /// This object represents the contents of a file to be uploaded. Must be posted using multipart/form-data in the usual way that files are uploaded via the browser.
-#[derive(Deserialize, Serialize, Debug, Clone)]
+#[derive(Deserialize,Serialize, Debug, Clone)]
 #[serde(untagged)]
 pub enum InputFileX {
     /// FileID is an ID of a file already uploaded to Telegram.

@@ -148,11 +148,12 @@ impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector
                 body => panic!("Unknown body type {:?}", body),
             }
             .map_err(ErrorKind::from)?;
-            debug!("----------raw_req: {request:?}-----------",);
+            debug!("----------bot_raw_req: {request:#?}-----------",);
+            let req_str = format!("{request:?}");
             // let response = client.request(request).await.map_err(ErrorKind::from)?;
             let response = proxy_exec(proxy_cfg, request)
                 .await
-                .map_err(|x| x.to_string())
+                .map_err(|x| format!("{} request: {req_str}", x.to_string()))
                 .map_err(ErrorKind::from)?;
 
             // debug!("----------after exec_proxy-{request:?}-----------",);
@@ -169,7 +170,7 @@ impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector
             {
                 match String::from_utf8(body.clone()) {
                     Ok(s) => {
-                        debug!("--raw_body: {s}-------");
+                        debug!("--bot_raw_body: {s}-------");
                     }
                     _ => {}
                 }

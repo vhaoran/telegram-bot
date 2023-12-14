@@ -234,7 +234,16 @@ impl Message {
         let id = raw.message_id;
         let from = match raw.from.clone() {
             Some(from) => from,
-            None => return Err(format!("Missing `from` field for Message")),
+            // None => return Err(format!("Missing `from` field for Message {raw:#?}")),
+            None => User {
+                id: UserId::from(0),
+                is_forum: None,
+                first_name: "".to_string(),
+                last_name: None,
+                username: None,
+                is_bot: false,
+                language_code: None,
+            },
         };
         let date = raw.date;
         //by whr
@@ -248,7 +257,9 @@ impl Message {
             Chat::Group(x) => MessageChat::Group(x),
             Chat::Supergroup(x) => MessageChat::Supergroup(x),
             Chat::Unknown(x) => MessageChat::Unknown(x),
-            Chat::Channel(_) => return Err(format!("Channel chat in Message")),
+            // Chat::Channel(_) => return Err(format!("Channel chat in Message")),
+            //todo
+            Chat::Channel(x) => MessageChat::Channel(x),
         };
 
         let reply_to_message = raw.reply_to_message.clone();

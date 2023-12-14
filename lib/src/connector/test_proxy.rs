@@ -7,7 +7,9 @@ use std::error::Error;
 use tokio::io::{stdout, AsyncWriteExt as _};
 //
 use crate::errors::ErrorKind;
+use anyhow::anyhow;
 use hyper::body::to_bytes;
+use log::error;
 use std::collections::HashSet;
 
 #[derive(Clone, Default, Debug)]

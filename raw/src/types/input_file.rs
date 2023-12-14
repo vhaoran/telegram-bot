@@ -1,4 +1,6 @@
 use bytes::Bytes;
+use serde::{Serialize, Serializer};
+use std::path::Path;
 
 use crate::requests::*;
 use crate::types::*;
@@ -186,6 +188,25 @@ impl<'a> From<&'a InputFileUpload> for InputFileUpload {
 impl<'a> From<&'a mut InputFileUpload> for InputFileUpload {
     fn from(value: &'a mut InputFileUpload) -> Self {
         value.clone()
+    }
+}
+
+impl Serialize for InputFile {
+    fn serialize<S>(&self, ser: S) -> Result<S::Ok, S::Error>
+    where
+        S: Serializer,
+    {
+        match &self.0 {
+            InputFileImpl::Ref(r) => ser.serialize_str(r.as_str()),
+            InputFileImpl::Path { path, file_name } => {
+                let file = file_name.clone().unwrap_or(Text::from(""));
+                let p = Path::new(path.as_str()).join(file.as_str());
+                let s = format!("attach://{}", p.display());
+                ser.serialize_str(s.as_str())
+            }
+            //todo-whr
+            InputFileImpl::Data { file_name, data } => ser.serialize_str("no-data"),
+        }
     }
 }
 

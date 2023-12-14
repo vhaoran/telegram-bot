@@ -9,7 +9,7 @@ pub struct User {
     pub id: UserId,
 
     //add by whr
-    is_forum: Option<bool>,
+    pub is_forum: Option<bool>,
 
     /// User‘s or bot’s first name.
     pub first_name: String,
@@ -89,7 +89,7 @@ pub struct Channel {
 pub enum MessageChat {
     Private(User),
     Group(Group),
-    // Channel(Channel),
+    Channel(Channel),
     Supergroup(Supergroup),
     #[doc(hidden)]
     Unknown(RawChat),
@@ -100,7 +100,7 @@ impl MessageChat {
         match *self {
             MessageChat::Private(ref x) => x.id.into(),
             MessageChat::Group(ref x) => x.id.into(),
-            // MessageChat::Channel(ref x) => x.id.into(),
+            MessageChat::Channel(ref x) => x.id.into(),
             MessageChat::Supergroup(ref x) => x.id.into(),
             MessageChat::Unknown(ref x) => x.id.into(),
         }
