@@ -39,6 +39,23 @@ impl InputMediaPhoto {
             caption_entities: None,
         }
     }
+
+
+    pub fn caption(&mut self,caption:String) ->&mut Self  {
+        self.caption = Some(caption);
+        self
+    }
+
+    pub fn parse_mode(&mut self,parse_mode: String) -> &mut Self {
+        self.parse_mode = Some(parse_mode);
+        self
+    }
+
+    pub fn caption_entities(&mut self,caption_entities: Vec<MessageEntity>) -> &mut Self {
+        self.caption_entities = Some(caption_entities);
+        self
+    }
+
 }
 
 /// Represents a video to be sent.
@@ -86,6 +103,39 @@ impl InputMediaVideo {
             supports_streaming: None,
         }
     }
+    pub fn caption(&mut self,caption:String) ->&mut Self  {
+        self.caption = Some(caption);
+        self
+    }
+    pub fn thumb(&mut self,thumb: InputFile) -> &mut Self {
+        self.thumb = Some(thumb);
+        self
+    }
+    pub fn parse_mode(&mut self,parse_mode: String) -> &mut Self {
+        self.parse_mode = Some(parse_mode);
+        self
+    }
+    pub fn caption_entities(&mut self,caption_entities: Vec<MessageEntity>) -> &mut Self {
+        self.caption_entities = Some(caption_entities);
+        self
+    }
+    pub fn width(&mut self,width: i64) -> &mut Self {
+        self.width = Some(width);
+        self
+    }
+    pub fn height(&mut self,height: i64) -> &mut Self {
+        self.height = Some(height);
+        self
+    }
+    pub fn duration(&mut self,duration: i64) -> &mut Self {
+        self.duration = Some(duration);
+        self
+    }
+    pub fn supports_streaming(&mut self,supports_streaming: bool) -> &mut Self {
+        self.supports_streaming = Some(supports_streaming);
+        self
+    }
+
 }
 
 /// Represents an animation file (GIF or H.264/MPEG-4 AVC video without sound) to be sent.
@@ -170,6 +220,36 @@ impl InputMediaAudio {
             title: None,
         }
     }
+
+    pub fn caption(&mut self,caption:String) ->&mut Self  {
+        self.caption = Some(caption);
+        self
+    }
+    pub fn thumb(&mut self,thumb: InputFile) -> &mut Self {
+        self.thumb = Some(thumb);
+        self
+    }
+    pub fn parse_mode(&mut self,parse_mode: String) -> &mut Self {
+        self.parse_mode = Some(parse_mode);
+        self
+    }
+    pub fn performer(&mut self,performer: String) -> &mut Self {
+        self.performer = Some(performer);
+        self
+    }
+    pub fn title(&mut self,title: String) -> &mut Self {
+        self.title = Some(title);
+        self
+    }
+
+    pub fn caption_entities(&mut self,caption_entities: Vec<MessageEntity>) -> &mut Self {
+        self.caption_entities = Some(caption_entities);
+        self
+    }
+    pub fn duration(&mut self,duration: i64) -> &mut Self {
+        self.duration = Some(duration);
+        self
+    }
 }
 
 /// Represents a general file to be sent.
@@ -204,4 +284,27 @@ impl InputMediaDocument {
             disable_content_type_detection: None,
         }
     }
+
+    pub fn caption(&mut self,caption:String) ->&mut Self  {
+        self.caption = Some(caption);
+        self
+    }
+    pub fn thumb(&mut self,thumb: InputFile) -> &mut Self {
+        self.thumb = Some(thumb);
+        self
+    }
+    pub fn parse_mode(&mut self,parse_mode: String) -> &mut Self {
+        self.parse_mode = Some(parse_mode);
+        self
+    }
+    pub fn disable_content_type_detection(&mut self,disable_content_type_detection: bool) -> &mut Self {
+        self.disable_content_type_detection = Some(disable_content_type_detection);
+        self
+    }
+
+    pub fn caption_entities(&mut self,caption_entities: Vec<MessageEntity>) -> &mut Self {
+        self.caption_entities = Some(caption_entities);
+        self
+    }
+
 }
