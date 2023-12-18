@@ -1,6 +1,7 @@
-use serde::ser::SerializeStruct;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::collections::HashSet;
+
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use serde::ser::SerializeStruct;
 
 #[derive(Deserialize, Clone, Default, Debug)]
 pub struct Abc {
