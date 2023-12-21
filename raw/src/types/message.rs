@@ -817,7 +817,7 @@ impl Serialize for MessageEntity {
         state.serialize_field("offset", &self.offset)?;
         state.serialize_field("length", &self.length)?;
 
-        match self.kind {
+        match self.kind.clone() {
             MessageEntityKind::Bold => {
                 state.serialize_field("type", "bold")?;
                 state.end()
@@ -850,6 +850,17 @@ impl Serialize for MessageEntity {
                 state.serialize_field("type", "mention")?;
                 state.end()
             }
+            MessageEntityKind::TextLink(url) => {
+                state.serialize_field("type", "text_link")?;
+                state.serialize_field("url", url.as_str())?;
+                state.end()
+            }
+            MessageEntityKind::TextMention(u) => {
+                state.serialize_field("type", "text_mention")?;
+                state.serialize_field("user", &u)?;
+                state.end()
+            }
+
             _ => {
                 state.serialize_field("unknow", &self.kind)?;
                 state.end()
