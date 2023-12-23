@@ -1,0 +1,61 @@
+Update {
+    id: 643837175,
+    kind: Message(
+        Message {
+            id: MessageId(
+                19157,
+            ),
+            from: User {
+                id: UserId(
+                    1607726842,
+                ),
+                is_forum: None,
+                first_name: "black",
+                last_name: Some(
+                    "dog",
+                ),
+                username: Some(
+                    "rgbdog",
+                ),
+                is_bot: false,
+                language_code: Some(
+                    "en",
+                ),
+            },
+            date: 1703318188,
+            chat: Private(
+                User {
+                    id: UserId(
+                        1607726842,
+                    ),
+                    is_forum: None,
+                    first_name: "black",
+                    last_name: Some(
+                        "dog",
+                    ),
+                    username: Some(
+                        "rgbdog",
+                    ),
+                    is_bot: false,
+                    language_code: None,
+                },
+            ),
+            forward: None,
+            reply_to_message: None,
+            edit_date: None,
+            kind: Text {
+                data: "https://t.me/caijimao",
+                entities: [
+                    MessageEntity {
+                        offset: 0,
+                        length: 21,
+                        kind: Url,
+                    },
+                ],
+            },
+            message_thread_id: None,
+            is_topic_message: None,
+            forum_topic_created: None,
+        },
+    ),
+}

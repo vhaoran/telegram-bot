@@ -74,7 +74,6 @@ pub async fn proxy_exec(p_cfg: ProxyCfg, req: Request<Body>) -> anyhow::Result<R
     // if let Some(headers) = proxy.http_headers(&uri) {
     //     req.headers_mut().extend(headers.clone().into_iter());
     // }
-
     let client = Client::builder().build(proxy);
     let resp = client.request(req).await?;
 

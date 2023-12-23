@@ -747,18 +747,22 @@ pub struct MessageEntity {
 // #[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 #[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 pub enum MessageEntityKind {
-    Mention,
-    Hashtag,
-    BotCommand,
-    Url,
-    Email,
-    Bold,
-    Underline,
-    Italic,
-    Code,
-    Pre,
-    TextLink(String), // TODO(knsd) URL?
-    TextMention(User),
+    Mention,           //v
+    Hashtag,           //v
+    BotCommand,        //v
+    Url,               //v
+    Email,             //
+    Bold,              //
+    Underline,         //
+    Italic,            //
+    Code,              //
+    Pre,               //
+    TextLink(String),  //
+    TextMention(User), //
+    //-----------whr--------------------------
+    PreCode(String), //language
+    Strikethrough,
+    Spoiler,
     #[doc(hidden)]
     Unknown(RawMessageEntity),
 }
@@ -793,9 +797,12 @@ impl<'de> Deserialize<'de> for MessageEntity {
             "bold" => Bold,
             "underline" => Underline,
             "italic" => Italic,
+            "strikethrough" => Strikethrough,
+            "spoiler" => Spoiler,
             "code" => Code,
             "pre" => Pre,
             "text_link" => TextLink(required_field!(url)),
+            "pre_code" => PreCode(required_field!(language)),
             "text_mention" => TextMention(required_field!(user)),
             _ => Unknown(raw),
         };
@@ -846,15 +853,34 @@ impl Serialize for MessageEntity {
                 state.serialize_field("type", "italic")?;
                 state.end()
             }
+            MessageEntityKind::Strikethrough => {
+                state.serialize_field("type", "strikethrough")?;
+                state.end()
+            }
+            MessageEntityKind::Spoiler => {
+                state.serialize_field("type", "spoiler")?;
+                state.end()
+            }
             MessageEntityKind::Mention => {
                 state.serialize_field("type", "mention")?;
                 state.end()
             }
+            MessageEntityKind::Url => {
+                state.serialize_field("type", "url")?;
+                state.end()
+            }
+
             MessageEntityKind::TextLink(url) => {
                 state.serialize_field("type", "text_link")?;
                 state.serialize_field("url", url.as_str())?;
                 state.end()
             }
+            MessageEntityKind::PreCode(language) => {
+                state.serialize_field("type", "pre_code")?;
+                state.serialize_field("language", language.as_str())?;
+                state.end()
+            }
+
             MessageEntityKind::TextMention(u) => {
                 state.serialize_field("type", "text_mention")?;
                 state.serialize_field("user", &u)?;
@@ -886,6 +912,9 @@ pub struct RawMessageEntity {
     pub url: Option<String>,
     /// For “text_mention” only, the mentioned user.
     pub user: Option<User>,
+    //
+    //for pre_code/
+    pub language: Option<String>,
 }
 
 /// This object represents one size of a photo or a file / sticker thumbnail.
