@@ -110,6 +110,7 @@ pub enum MessageKind {
         /// Information about the file.
         data: Audio,
         caption: Option<String>,
+        caption_entities: Option<Vec<MessageEntity>>,
         media_group_id: Option<String>,
     },
     /// Message is a general file.
@@ -118,6 +119,7 @@ pub enum MessageKind {
         data: Document,
         /// Caption for the document, 0-200 characters.
         caption: Option<String>,
+        caption_entities: Option<Vec<MessageEntity>>,
         media_group_id: Option<String>,
     },
     /// Message is a photo.
@@ -126,6 +128,7 @@ pub enum MessageKind {
         data: Vec<PhotoSize>,
         /// Caption for the photo, 0-200 characters.
         caption: Option<String>,
+        caption_entities: Option<Vec<MessageEntity>>,
         /// The unique identifier of a media message group this message belongs to.
         media_group_id: Option<String>,
     },
@@ -140,6 +143,8 @@ pub enum MessageKind {
         data: Video,
         /// Caption for the video, 0-200 characters.
         caption: Option<String>,
+        caption_entities: Option<Vec<MessageEntity>>,
+
         /// The unique identifier of a media message group this message belongs to.
         media_group_id: Option<String>,
     },
@@ -387,6 +392,7 @@ impl Message {
                     return make_message(MessageKind::$variant {
                         data: val,
                         caption: raw.caption,
+                        caption_entities: raw.caption_entities,
                         media_group_id: raw.media_group_id,
                     });
                 }
@@ -544,6 +550,7 @@ impl ChannelPost {
                     return make_message(MessageKind::$variant {
                         data: val,
                         caption: raw.caption,
+                        caption_entities: raw.caption_entities,
                         media_group_id: raw.media_group_id,
                     });
                 }
@@ -682,6 +689,7 @@ pub struct RawMessage {
     pub video_note: Option<VideoNote>,
     /// Caption for the document, photo or video, 0-200 characters.
     pub caption: Option<String>,
+    pub caption_entities: Option<Vec<MessageEntity>>,
     /// Message is a shared contact, information about the contact.
     pub contact: Option<Contact>,
     /// Message is a shared location, information about the location.

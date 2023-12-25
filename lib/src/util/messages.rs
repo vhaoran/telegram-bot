@@ -37,11 +37,13 @@ impl MessageText for MessageKind {
             MessageKind::Audio {
                 data,
                 caption,
+                caption_entities,
                 media_group_id,
             } => caption.clone().or_else(|| data.title.clone()),
             MessageKind::Document {
                 data,
                 caption,
+                caption_entities,
                 media_group_id,
             } => caption.clone().or_else(|| data.file_name.clone()),
             MessageKind::Photo { caption, .. } => caption.to_owned(),
@@ -104,7 +106,7 @@ impl MessageGetFiles for MessageKind {
     fn get_files<'a>(&'a self) -> Option<Vec<GetFile>> {
         match self {
             MessageKind::Text { .. } => None,
-            MessageKind::Audio { data,.. } => Some(vec![data.get_file()]),
+            MessageKind::Audio { data, .. } => Some(vec![data.get_file()]),
             MessageKind::Document { data, .. } => {
                 let mut files = vec![data.get_file()];
                 if let Some(thumb) = &data.thumb {

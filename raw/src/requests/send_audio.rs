@@ -13,6 +13,7 @@ pub struct SendAudio<'c, 'p, 't> {
 
     audio: InputFile,
     caption: Option<Cow<'c, str>>,
+    caption_entities: Option<Vec<MessageEntity>>,
     parse_mode: Option<ParseMode>,
     duration: Option<Integer>,
     performer: Option<Cow<'p, str>>,
@@ -38,6 +39,7 @@ impl<'c, 'p, 't> ToMultipart for SendAudio<'c, 'p, 't> {
             (reply_to_message_id (text), optional);
             (disable_notification (text), when_true);
             (reply_markup (json), optional);
+            (caption_entities(json), optional);
         }
     }
 }
@@ -63,6 +65,7 @@ impl<'c, 'p, 't> SendAudio<'c, 'p, 't> {
             message_thread_id: None,
             audio: audio.into(),
             caption: None,
+            caption_entities: None,
             parse_mode: None,
             duration: None,
             performer: None,
@@ -97,6 +100,15 @@ impl<'c, 'p, 't> SendAudio<'c, 'p, 't> {
         T: Into<Cow<'c, str>>,
     {
         self.caption = Some(caption.into());
+        self
+    }
+    pub fn caption_entities(&mut self, entities: Vec<MessageEntity>) -> &mut Self {
+        self.caption_entities = Some(entities);
+        self
+    }
+
+    pub fn caption_entities_opt(&mut self, entities: Option<Vec<MessageEntity>>) -> &mut Self {
+        self.caption_entities = entities;
         self
     }
 

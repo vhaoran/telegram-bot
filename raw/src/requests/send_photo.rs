@@ -14,6 +14,7 @@ pub struct SendPhoto<'c> {
 
     photo: InputFile,
     caption: Option<Cow<'c, str>>,
+    caption_entities: Option<Vec<MessageEntity>>,
     parse_mode: Option<ParseMode>,
     reply_to_message_id: Option<MessageId>,
     disable_notification: bool,
@@ -31,6 +32,7 @@ impl<'c> ToMultipart for SendPhoto<'c> {
             (reply_to_message_id (text), optional);
             (disable_notification (text), when_true);
             (reply_markup (json), optional);
+            (caption_entities(json), optional);
         }
     }
 }
@@ -56,6 +58,7 @@ impl<'c> SendPhoto<'c> {
             message_thread_id: None,
             photo: photo.into(),
             caption: None,
+            caption_entities: None,
             parse_mode: None,
             reply_to_message_id: None,
             reply_markup: None,
@@ -71,12 +74,19 @@ impl<'c> SendPhoto<'c> {
         self
     }
 
+    pub fn caption_entities(&mut self, entities: Vec<MessageEntity>) -> &mut Self {
+        self.caption_entities = Some(entities);
+        self
+    }
+    pub fn caption_entities_opt(&mut self, entities: Option<Vec<MessageEntity>>) -> &mut Self {
+        self.caption_entities = entities;
+        self
+    }
 
     pub fn message_thread_id_opt(&mut self, message_thread_id: Option<Integer>) -> &mut Self {
         self.message_thread_id = message_thread_id;
         self
     }
-
 
     //whr
     pub fn message_thread_id(&mut self, message_thread_id: Integer) -> &mut Self {
