@@ -185,7 +185,6 @@ impl Api {
         let request_id = self.0.next_request_id.fetch_add(1, Ordering::Relaxed);
         debug!("--request_id: {request_id:#?}-------");
 
-
         let span = tracing::trace_span!("send_http_request", request_id = request_id);
         async {
             tracing::trace!(name = %request.name(), body = %request.body, "sending request");
@@ -218,8 +217,9 @@ impl Api {
                 }, "response received"
             );
 
+            tracing::trace!("--before-deserialize-------");
             let response = Resp::deserialize(http_response).map_err(ErrorKind::from)?;
-            tracing::trace!("response deserialized");
+            tracing::debug!("response deserialized");
             Ok(response)
         }
         .map(|result| {

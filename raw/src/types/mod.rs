@@ -21,6 +21,9 @@ pub mod update;
 pub mod chat_administrator;
 mod input_media;
 mod input_file_x;
+mod chat_boost;
+mod chat_boost_removed;
+
 pub use input_file_x::*;
 
 pub use input_media::*;

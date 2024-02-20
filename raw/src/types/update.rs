@@ -1,5 +1,7 @@
 use crate::types::*;
 use crate::ChatJoinRequest;
+use crate::types::chat_boost::ChatBoostUpdate;
+use crate::types::chat_boost_removed::ChatBoostRemoved;
 
 /// This object represents an incoming update.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
@@ -56,6 +58,12 @@ pub enum UpdateKind {
     //add by whr
     #[serde(rename = "chat_join_request")]
     ChatJoinRequest(ChatJoinRequest),
+    //----add by whr---------------------------------
+    #[serde(rename = "chat_boost")]
+    ChatBoost(ChatBoostUpdate),
+    #[serde(rename = "removed_chat_boost")]
+    RemovedChatBoost(ChatBoostRemoved),
+
 
     #[doc(hidden)]
     Error(String),

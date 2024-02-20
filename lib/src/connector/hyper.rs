@@ -155,6 +155,10 @@ impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector for
                     acc.extend_from_slice(&chunk);
                     acc
                 });
+            debug!(
+                "--raw_body_bot_api: {:?}-------",
+                std::str::from_utf8(body.as_slice())
+            );
 
             Ok::<HttpResponse, Error>(HttpResponse { body: Some(body) })
         };

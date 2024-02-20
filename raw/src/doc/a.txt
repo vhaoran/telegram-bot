@@ -1,0 +1,13 @@
+{"update_id":156164228,
+"chat_boost":{"chat":{"id":-1001937088141,
+"title":"\u53e4\u7075\u652f\u4ed8\u5b9d\u652f\u4ed8\u6e20\u9053",
+"type":"supergroup"
+},
+"boost":{
+"boost_id":"6df0eb612d3062be970167d2ada6f}
+837","add_date":1708364528,"expiration_date":1709799036,"source":{
+"source":"premium","user":{"id":6323110545,"is_bot":false,"first_name":"\u6625\u8282\u4e0d\u653e\u5047\uff08\u5d
+}
+e5\u4f5c\u4e2d\uff09Q\u6296\u97f3\u5feb\u624b\u4e1a\u52a1\u8bf4\u660e\u5728\u7b80\u5386",
+"last_name":"\u53e4\u7075\u7cbe\u602a\u4ee3\u5237\u6d41\u6c34","username":"GLJG888","lang
+uage_code":"zh-hans","is_premium":true}}}
