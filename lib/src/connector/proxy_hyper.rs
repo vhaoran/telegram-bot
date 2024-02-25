@@ -1,4 +1,4 @@
-use log::{debug, error};
+use log::{debug};
 use std::io::{Cursor, Read};
 use std::path::Path;
 use std::pin::Pin;
@@ -13,14 +13,14 @@ use hyper::{
     http::Error as HttpError,
     Method, Request, Uri,
 };
-use hyper_proxy::{Intercept, Proxy, ProxyConnector};
+
 #[cfg(feature = "rustls")]
 use hyper_rustls::HttpsConnector;
 #[cfg(feature = "openssl")]
 use hyper_tls::HttpsConnector;
 
 use crate::connector::test_proxy::{proxy_exec, ProxyCfg};
-use hyper::client::HttpConnector;
+
 use multipart::client::lazy::Multipart;
 use telegram_bot_raw::{
     Body as TelegramBody, HttpRequest, HttpResponse, Method as TelegramMethod, MultipartValue, Text,
@@ -178,7 +178,7 @@ impl<C: Connect + std::fmt::Debug + 'static + Clone + Send + Sync> Connector
 
             Ok::<HttpResponse, Error>(HttpResponse { body: Some(body) })
         };
-        let proxy_cfg = self.1.clone();
+        let _proxy_cfg = self.1.clone();
         // debug!("--req_proxy_cfg: {proxy_cfg:?}-------");
 
         future.boxed()

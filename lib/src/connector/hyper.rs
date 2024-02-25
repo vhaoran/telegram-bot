@@ -193,7 +193,7 @@ pub fn proxy_connector_of_https(proxy_uri: &str) -> Result<Box<dyn Connector>, S
 
     let proxy_uri = proxy_uri.unwrap();
 
-    let mut proxy = Proxy::new(Intercept::All, proxy_uri);
+    let proxy = Proxy::new(Intercept::All, proxy_uri);
     // proxy.set_authorization(Authorization::basic("John Doe", "Agent1234"));
     // #[cfg(feature = "rustls")]
     // let connector = HttpConnector::with_native_roots();
@@ -213,7 +213,7 @@ pub fn proxy_connector_of_https(proxy_uri: &str) -> Result<Box<dyn Connector>, S
     //     debug!("--proxy_header: {headers:#?}-------");
     // }
 
-    let mut c = Client::builder().build(proxy_connector);
+    let c = Client::builder().build(proxy_connector);
 
     Ok(Box::new(HyperConnector::new(c)))
 }

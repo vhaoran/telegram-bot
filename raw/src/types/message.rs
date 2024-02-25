@@ -375,6 +375,7 @@ impl Message {
             }};
         }
 
+        #[allow(unused_macros)]
         macro_rules! maybe_field_with_caption {
             ($name:ident, $variant:ident) => {{
                 if let Some(val) = raw.$name {
@@ -533,6 +534,7 @@ impl ChannelPost {
             }};
         }
 
+        #[allow(unused_macros)]
         macro_rules! maybe_field_with_caption {
             ($name:ident, $variant:ident) => {{
                 if let Some(val) = raw.$name {

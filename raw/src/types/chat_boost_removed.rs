@@ -1,3 +1,4 @@
+#[allow(unused_imports)]
 use crate::{Chat, Document};
 use std::cmp::Ordering;
 

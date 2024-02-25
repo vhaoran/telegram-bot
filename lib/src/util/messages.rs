@@ -37,8 +37,8 @@ impl MessageText for MessageKind {
             MessageKind::Audio {
                 data,
                 caption,
-                caption_entities,
-                media_group_id,
+                caption_entities: _,
+                media_group_id: _,
             } => caption.clone().or_else(|| data.title.clone()),
             MessageKind::Document { data, caption, .. } => {
                 caption.clone().or_else(|| data.file_name.clone())

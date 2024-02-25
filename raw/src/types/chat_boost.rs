@@ -1,4 +1,5 @@
 use crate::types::*;
+#[allow(unused_imports)]
 use crate::Chat;
 use std::cmp::Ordering;
 

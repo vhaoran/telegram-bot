@@ -205,6 +205,7 @@ impl Serialize for InputFile {
                 ser.serialize_str(s.as_str())
             }
             //todo-whr
+            #[allow(unused_variables)]
             InputFileImpl::Data { file_name, data } => ser.serialize_str("no-data"),
         }
     }

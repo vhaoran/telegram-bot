@@ -1,16 +1,16 @@
-use futures::{TryFutureExt, TryStreamExt};
+
 // use headers::Authorization;
-use hyper::client::{HttpConnector, ResponseFuture};
-use hyper::{body::HttpBody, Body, Client, Method, Request, Response, Uri};
+use hyper::client::{HttpConnector};
+use hyper::{body::HttpBody, Body, Client, Request, Response, Uri};
 use hyper_proxy::{Intercept, Proxy, ProxyConnector};
-use std::error::Error;
-use tokio::io::{stdout, AsyncWriteExt as _};
+
+
 //
-use crate::errors::ErrorKind;
-use anyhow::anyhow;
-use hyper::body::to_bytes;
-use log::error;
-use std::collections::HashSet;
+
+
+
+
+
 
 #[derive(Clone, Default, Debug)]
 pub struct ProxyCfg {
@@ -56,7 +56,7 @@ pub async fn proxy_exec(p_cfg: ProxyCfg, req: Request<Body>) -> anyhow::Result<R
     // let mut req = req.clone();
     let proxy = {
         let proxy_uri = p_cfg.url.as_str().parse()?;
-        let mut proxy = Proxy::new(Intercept::All, proxy_uri);
+        let proxy = Proxy::new(Intercept::All, proxy_uri);
         // if p_cfg.user_name.len() > 0 {
         //     proxy.set_authorization(Authorization::basic(
         //         p_cfg.user_name.as_str(),
@@ -69,7 +69,7 @@ pub async fn proxy_exec(p_cfg: ProxyCfg, req: Request<Body>) -> anyhow::Result<R
         proxy_connector
     };
 
-    let uri: Uri = req.uri().clone();
+    let _uri: Uri = req.uri().clone();
     // let mut req = Request::get(uri.clone()).body(hyper::Body::empty())?;
     // if let Some(headers) = proxy.http_headers(&uri) {
     //     req.headers_mut().extend(headers.clone().into_iter());
@@ -83,7 +83,7 @@ pub async fn proxy_exec(p_cfg: ProxyCfg, req: Request<Body>) -> anyhow::Result<R
 pub async fn p_test() -> anyhow::Result<()> {
     let proxy = {
         let proxy_uri = "http://127.0.0.1:33210".parse()?;
-        let mut proxy = Proxy::new(Intercept::All, proxy_uri);
+        let proxy = Proxy::new(Intercept::All, proxy_uri);
         // proxy.set_authorization(Authorization::basic("John Doe", "Agent1234"));
         let connector = HttpConnector::new();
         let proxy_connector = ProxyConnector::from_proxy(connector, proxy)?;
