@@ -40,12 +40,9 @@ impl MessageText for MessageKind {
                 caption_entities,
                 media_group_id,
             } => caption.clone().or_else(|| data.title.clone()),
-            MessageKind::Document {
-                data,
-                caption,
-                caption_entities,
-                media_group_id,
-            } => caption.clone().or_else(|| data.file_name.clone()),
+            MessageKind::Document { data, caption, .. } => {
+                caption.clone().or_else(|| data.file_name.clone())
+            }
             MessageKind::Photo { caption, .. } => caption.to_owned(),
             MessageKind::Sticker { .. } => None,
             MessageKind::Video { caption, .. } => caption.to_owned(),
