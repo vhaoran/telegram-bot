@@ -34,6 +34,7 @@ pub struct Message {
     pub kind: MessageKind,
 
     //add by whr
+    // pub sender_chat: MessageChat,
     pub message_thread_id: Option<Integer>,
     pub is_topic_message: Option<bool>,
     pub forum_topic_created: Option<ForumTopicCreated>,
@@ -757,15 +758,17 @@ pub struct MessageEntity {
 // #[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 #[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 pub enum MessageEntityKind {
-    Mention,           //v
-    Hashtag,           //v
-    BotCommand,        //v
-    Url,               //v
-    Email,             //
-    Bold,              //
-    Underline,         //
-    Italic,            //
-    Code,              //
+    Mention,
+    //
+    Cashtag,
+    Hashtag,
+    BotCommand,
+    Url,
+    Email,
+    Bold,
+    Underline,
+    Italic,
+    Code,
     Pre,               //
     TextLink(String),  //
     TextMention(User), //
@@ -773,6 +776,13 @@ pub enum MessageEntityKind {
     PreCode(String), //language
     Strikethrough,
     Spoiler,
+    //
+    PhoneNumber,
+    //
+    BlockQuote,
+    //
+    ExpandableBlockQuote,
+    //
     #[doc(hidden)]
     Unknown(RawMessageEntity),
 }
@@ -801,6 +811,8 @@ impl<'de> Deserialize<'de> for MessageEntity {
         let kind = match raw.type_.as_str() {
             "mention" => Mention,
             "hashtag" => Hashtag,
+            //
+            "cashtag" => Cashtag,
             "bot_command" => BotCommand,
             "url" => Url,
             "email" => Email,
@@ -811,6 +823,11 @@ impl<'de> Deserialize<'de> for MessageEntity {
             "spoiler" => Spoiler,
             "code" => Code,
             "pre" => Pre,
+            //
+            "phone_number" => PhoneNumber,
+            "blockquote" => BlockQuote,
+            "expandable_blockquote" => ExpandableBlockQuote,
+
             "text_link" => TextLink(required_field!(url)),
             "pre_code" => PreCode(required_field!(language)),
             "text_mention" => TextMention(required_field!(user)),
@@ -851,12 +868,22 @@ impl Serialize for MessageEntity {
                 state.serialize_field("type", "code")?;
                 state.end()
             }
+            MessageEntityKind::Pre => {
+                state.serialize_field("type", "pre")?;
+                state.end()
+            }
+
             MessageEntityKind::Email => {
                 state.serialize_field("type", "email")?;
                 state.end()
             }
             MessageEntityKind::Hashtag => {
                 state.serialize_field("type", "hashtag")?;
+                state.end()
+            }
+            //
+            MessageEntityKind::Cashtag => {
+                state.serialize_field("type", "cashtag")?;
                 state.end()
             }
             MessageEntityKind::Italic => {
@@ -879,7 +906,22 @@ impl Serialize for MessageEntity {
                 state.serialize_field("type", "url")?;
                 state.end()
             }
-
+            //
+            MessageEntityKind::PhoneNumber => {
+                state.serialize_field("type", "phone_number")?;
+                state.end()
+            }
+            //
+            MessageEntityKind::BlockQuote => {
+                state.serialize_field("type", "blockquote")?;
+                state.end()
+            }
+            //
+            MessageEntityKind::ExpandableBlockQuote => {
+                state.serialize_field("type", "expandable_blockquote")?;
+                state.end()
+            }
+            //
             MessageEntityKind::TextLink(url) => {
                 state.serialize_field("type", "text_link")?;
                 state.serialize_field("url", url.as_str())?;

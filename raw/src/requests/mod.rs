@@ -38,8 +38,10 @@ pub mod unban_chat_member;
 pub mod unpin_chat_message;
 pub mod send_media_group;
 mod a_multipart_test;
+mod create_chat_invite_link;
 
 pub use self::_base::*;
+pub use self::create_chat_invite_link::*;
 pub use self::answer_callback_query::*;
 pub use self::answer_inline_query::*;
 pub use self::chat_join_request::*;
