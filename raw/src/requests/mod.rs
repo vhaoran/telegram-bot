@@ -1,8 +1,11 @@
 #[macro_use]
 pub mod _base;
+mod a_multipart_test;
 pub mod answer_callback_query;
 pub mod answer_inline_query;
+mod approve_chat_join_request;
 pub mod chat_join_request;
+mod create_chat_invite_link;
 pub mod delete_message;
 pub mod edit_message_caption;
 pub mod edit_message_live_location;
@@ -27,6 +30,7 @@ pub mod send_chat_action;
 pub mod send_contact;
 pub mod send_document;
 pub mod send_location;
+pub mod send_media_group;
 pub mod send_message;
 pub mod send_photo;
 pub mod send_poll;
@@ -36,15 +40,13 @@ pub mod stop_message_live_location;
 pub mod stop_poll;
 pub mod unban_chat_member;
 pub mod unpin_chat_message;
-pub mod send_media_group;
-mod a_multipart_test;
-mod create_chat_invite_link;
 
 pub use self::_base::*;
-pub use self::create_chat_invite_link::*;
 pub use self::answer_callback_query::*;
 pub use self::answer_inline_query::*;
+pub use self::approve_chat_join_request::*;
 pub use self::chat_join_request::*;
+pub use self::create_chat_invite_link::*;
 pub use self::delete_message::*;
 pub use self::edit_message_caption::*;
 pub use self::edit_message_live_location::*;

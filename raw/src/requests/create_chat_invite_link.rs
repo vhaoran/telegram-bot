@@ -6,9 +6,16 @@ use crate::types::*;
 #[must_use = "requests do nothing unless sent"]
 pub struct CreateChatInviteLink {
     chat_id: ChatRef,
+    /// Invite link name; 0-32 characters
     name: Option<String>,
+    /// Point in time (Unix timestamp) when the link will expire
     expire_date: Option<i64>,
+    /// The maximum number of users that can be members of the chat
+    /// simultaneously after joining the chat via this invite link;
+    /// 1-99999
     member_limit: Option<i64>,
+    /// True, if users joining the chat via the link need to be approved by chat administrators.
+    /// If True, member_limit can't be specified
     creates_join_request: Option<bool>,
 }
 
