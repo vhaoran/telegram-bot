@@ -14,12 +14,18 @@ pub struct CopyMessage {
     message_id: MessageId,
 }
 
+#[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
+pub struct CopyMessageResult {
+    pub message_id: Integer,
+}
+
 impl Request for CopyMessage {
     type Type = JsonRequestType<Self>;
-    type Response = JsonIdResponse<Message>;
+    // type Response = JsonIdResponse<serde_json::Value>;
+    type Response = JsonIdResponse<CopyMessageResult>;
 
     fn serialize(&self) -> Result<HttpRequest, Error> {
-        Self::Type::serialize(RequestUrl::method("CopyMessage"), self)
+        Self::Type::serialize(RequestUrl::method("copyMessage"), self)
     }
 }
 
@@ -46,7 +52,7 @@ impl CopyMessage {
 
 /// Forward message.
 pub trait CanCopyMessage {
-    fn forward<T>(&self, to: T) -> CopyMessage
+    fn copy<T>(&self, to: T) -> CopyMessage
     where
         T: ToChatRef;
 }
@@ -55,7 +61,7 @@ impl<M> CanCopyMessage for M
 where
     M: ToMessageId + ToSourceChat,
 {
-    fn forward<T>(&self, to: T) -> CopyMessage
+    fn copy<T>(&self, to: T) -> CopyMessage
     where
         T: ToChatRef,
     {

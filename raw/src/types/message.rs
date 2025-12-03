@@ -799,6 +799,7 @@ impl<'de> Deserialize<'de> for MessageEntity {
         let offset = raw.offset;
         let length = raw.length;
 
+
         macro_rules! required_field {
             ($name:ident) => {{
                 match raw.$name {
