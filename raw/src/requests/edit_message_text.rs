@@ -12,6 +12,9 @@ pub struct EditMessageText<'s> {
 
     message_id: MessageId,
     text: Cow<'s, str>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    entities: Option<Vec<MessageEntity>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     parse_mode: Option<ParseMode>,
     #[serde(skip_serializing_if = "Not::not")]
@@ -40,6 +43,7 @@ impl<'s> EditMessageText<'s> {
             chat_id: chat.to_chat_ref(),
             message_id: message_id.to_message_id(),
             text: text.into(),
+            entities: None,
             parse_mode: None,
             disable_web_page_preview: false,
             reply_markup: None,
@@ -48,6 +52,10 @@ impl<'s> EditMessageText<'s> {
 
     pub fn parse_mode(&mut self, parse_mode: ParseMode) -> &mut Self {
         self.parse_mode = Some(parse_mode);
+        self
+    }
+    pub fn entities(&mut self, entities: Vec<MessageEntity>) -> &mut Self {
+        self.entities = Some(entities);
         self
     }
 
