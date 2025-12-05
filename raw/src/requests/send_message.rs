@@ -18,8 +18,18 @@ pub struct SendMessage<'s> {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     parse_mode: Option<ParseMode>,
+
+    /// maybe no used
+    /// by whr
     #[serde(skip_serializing_if = "Not::not")]
     disable_web_page_preview: bool,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    link_preview_options: Option<LinkPreviewOptions>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    reply_parameters: Option<ReplyParameters>,
+
     #[serde(skip_serializing_if = "Not::not")]
     disable_notification: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
@@ -48,6 +58,8 @@ impl<'s> SendMessage<'s> {
             text: text.into(),
             parse_mode: None,
             disable_web_page_preview: false,
+            link_preview_options: None,
+            reply_parameters: None,
             disable_notification: false,
             reply_to_message_id: None,
             reply_markup: None,
@@ -57,10 +69,16 @@ impl<'s> SendMessage<'s> {
         }
     }
 
+    pub fn link_preview_options(&mut self, opt: LinkPreviewOptions) -> &mut Self {
+        self.link_preview_options = Some(opt);
+        self
+    }
+
     pub fn parse_mode(&mut self, parse_mode: ParseMode) -> &mut Self {
         self.parse_mode = Some(parse_mode);
         self
     }
+
     pub fn entities(&mut self, entities: Vec<MessageEntity>) -> &mut Self {
         self.entities = entities;
         self
