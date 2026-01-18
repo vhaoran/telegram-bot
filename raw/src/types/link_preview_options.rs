@@ -1,4 +1,4 @@
-use crate::{ChatId, ChatRef, MessageEntity};
+use crate::MessageEntity;
 
 #[derive(Serialize, Deserialize, Default, PartialEq, PartialOrd, Debug, Clone)]
 // #[serde(untagged)]

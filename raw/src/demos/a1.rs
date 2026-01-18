@@ -3,6 +3,7 @@ use serde::ser::SerializeStruct;
 #[allow(unused_imports)]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 
+#[allow(dead_code)]
 #[derive(Deserialize, Clone, Default, Debug)]
 pub struct Abc {
     pub id: i64,
@@ -28,14 +29,3 @@ impl Serialize for Abc {
     }
 }
 
-#[test]
-fn aa() {
-    //---------------------
-    let src = Abc {
-        id: 1,
-        name: "my_name".to_string(),
-    };
-
-    let s = serde_json::to_string(&src);
-    println!("-----------{s:#?}-----------",);
-}

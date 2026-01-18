@@ -36,6 +36,7 @@ impl PartialOrd for ChatBoostUpdate {
 }
 
 //-------------------------------------
+#[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
 pub struct ChatBoost {
     pub boost_id: String,
@@ -44,6 +45,7 @@ pub struct ChatBoost {
     pub source: ChatBoostSource,
 }
 //-------------------------------------
+#[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
 pub enum ChatBoostSource {
     Premium(ChatBoostSourcePremium),
@@ -51,6 +53,7 @@ pub enum ChatBoostSource {
     Giveway(ChatBoostSourceGiveaway),
 }
 //-------------------------------------
+#[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
 pub struct ChatBoostSourcePremium {
     pub source: String,
@@ -58,6 +61,7 @@ pub struct ChatBoostSourcePremium {
 }
 
 //-------------------------------------
+#[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
 pub struct ChatBoostSourceGiftCode {
     pub source: String,
@@ -65,6 +69,7 @@ pub struct ChatBoostSourceGiftCode {
 }
 
 //-------------------------------------
+#[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq, PartialOrd, Eq, Ord, Hash, Deserialize)]
 pub struct ChatBoostSourceGiveaway {
     pub source: String,
