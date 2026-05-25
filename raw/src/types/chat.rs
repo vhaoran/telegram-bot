@@ -29,8 +29,8 @@ pub struct Group {
     /// Unique identifier for this chat.
     pub id: GroupId,
     //add by whr
-    is_forum: Option<bool>,
-    active_usernames: Option<Vec<String>>,
+    pub is_forum: Option<bool>,
+    pub active_usernames: Option<Vec<String>>,
 
     /// Title, for supergroups, channels and group chats.
     pub title: String,
@@ -96,13 +96,41 @@ pub enum MessageChat {
 }
 
 impl MessageChat {
+    pub fn id_i64(&self) -> i64 {
+        self.id().into()
+    }
+
     pub fn id(&self) -> ChatId {
-        match *self {
+        match &self {
             MessageChat::Private(ref x) => x.id.into(),
             MessageChat::Group(ref x) => x.id.into(),
             MessageChat::Channel(ref x) => x.id.into(),
             MessageChat::Supergroup(ref x) => x.id.into(),
             MessageChat::Unknown(ref x) => x.id.into(),
+        }
+    }
+
+    pub fn title(&self) -> String {
+        match &self {
+            MessageChat::Private(ref x) => format!(
+                "{} {}",
+                x.first_name.as_str(),
+                x.last_name.clone().unwrap_or_default()
+            ),
+            MessageChat::Group(ref x) => x.title.clone(),
+            MessageChat::Channel(ref x) => x.title.clone(),
+            MessageChat::Supergroup(ref x) => x.title.clone(),
+            MessageChat::Unknown(ref x) => x.title.clone().unwrap_or_default(),
+        }
+    }
+    pub fn user_name(&self) -> String {
+        match &self {
+            //xxxxx
+            MessageChat::Private(ref x) => x.username.clone().unwrap_or_default(),
+            MessageChat::Group(_) => "".to_string(),
+            MessageChat::Channel(ref x) => x.username.clone().unwrap_or_default(),
+            MessageChat::Supergroup(ref x) => x.username.clone().unwrap_or_default(),
+            MessageChat::Unknown(ref x) => x.username.clone().unwrap_or_default(),
         }
     }
 }

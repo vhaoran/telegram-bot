@@ -181,13 +181,12 @@ impl Api {
         request: HttpRequest,
     ) -> Result<Resp::Type, Error> {
         debug!("--http_req: {request:#?}-------");
-
         let request_id = self.0.next_request_id.fetch_add(1, Ordering::Relaxed);
         debug!("--request_id: {request_id:#?}-------");
 
-        let span = tracing::trace_span!("send_http_request", request_id = request_id);
+        // let span = tracing::trace_span!("send_http_request", request_id = request_id);
         async {
-            tracing::trace!(name = %request.name(), body = %request.body, "sending request");
+            // tracing::trace!(name = %request.name(), body = %request.body, "sending request");
             let http_response = self.0.connector.request(&self.0.token, request).await?;
 
             //--------------begin-----------------------
@@ -198,28 +197,28 @@ impl Api {
                     Ok(str) => str,
                     Err(_) => "<invalid utf-8 string>",
                 };
-                tracing::debug!("response_pump_body: {body}");
+                // tracing::debug!("response_pump_body: {body}");
             }
             //-----------end--------------------------
 
-            tracing::trace!(
-                response = %match http_response.body {
-                    Some(ref vec) => match std::str::from_utf8(vec) {
-                        Ok(str) => {
-                            //todo-whr
-                            tracing::trace!("trace_body: {str}");
-                            log::debug!("trace_body:{str}");
-                            str
-                        },
-                        Err(_) => "<invalid utf-8 string>"
-                    },
-                    None => "<empty body>",
-                }, "response received"
-            );
+            // tracing::trace!(
+            //     response = %match http_response.body {
+            //         Some(ref vec) => match std::str::from_utf8(vec) {
+            //             Ok(str) => {
+            //                 //todo-whr
+            //                 // tracing::trace!("trace_body: {str}");
+            //                 log::debug!("trace_body:{str}");
+            //                 str
+            //             },
+            //             Err(_) => "<invalid utf-8 string>"
+            //         },
+            //         None => "<empty body>",
+            //     }, "response received"
+            // );
 
-            tracing::trace!("--before-deserialize-------");
+            // tracing::trace!("--before-deserialize-------");
             let response = Resp::deserialize(http_response).map_err(ErrorKind::from)?;
-            tracing::debug!("response deserialized");
+            // tracing::debug!("response deserialized");
             Ok(response)
         }
         .map(|result| {
@@ -228,7 +227,7 @@ impl Api {
             }
             result
         })
-        .instrument(span)
+        // .instrument(span)
         .await
     }
 }

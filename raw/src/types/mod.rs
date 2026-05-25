@@ -24,10 +24,12 @@ mod chat_boost_removed;
 mod input_file_x;
 mod input_media;
 mod link_preview_options;
+mod chat_full_info;
 
 pub use input_file_x::*;
 
 pub use input_media::*;
+pub use chat_full_info::*;
 
 pub use self::callback_query::*;
 pub use self::link_preview_options::*;
