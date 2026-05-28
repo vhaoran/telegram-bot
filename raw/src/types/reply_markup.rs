@@ -204,6 +204,14 @@ impl InlineKeyboardMarkup {
         }
     }
 
+    pub fn buttons_count(&self) -> usize {
+        self.inline_keyboard.iter().map(|x| x.len()).sum()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.buttons_count() == 0
+    }
+
     fn init(inline_keyboard: Vec<Vec<InlineKeyboardButton>>) -> Self {
         Self { inline_keyboard }
     }
