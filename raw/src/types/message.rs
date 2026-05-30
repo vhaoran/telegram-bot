@@ -149,6 +149,20 @@ pub enum MessageKind {
         /// The unique identifier of a media message group this message belongs to.
         media_group_id: Option<String>,
     },
+    Animation {
+        /// Information about the video.
+        data: Animation,
+        /// Caption for the video, 0-200 characters.
+        caption: Option<String>,
+        caption_entities: Option<Vec<MessageEntity>>,
+
+        /// The unique identifier of a media message group this message belongs to.
+        media_group_id: Option<String>,
+    },
+
+
+
+
     /// Message is a voice message.
     Voice {
         /// Information about the file.
@@ -425,6 +439,7 @@ impl Message {
         maybe_field_with_caption_and_group!(photo, Photo);
         maybe_field!(sticker, Sticker);
         maybe_field_with_caption_and_group!(video, Video);
+        maybe_field_with_caption_and_group!(animation, Animation);
         maybe_field!(voice, Voice);
         maybe_field!(video_note, VideoNote);
         maybe_field!(contact, Contact);
@@ -583,6 +598,7 @@ impl ChannelPost {
         maybe_field_with_caption_and_group!(photo, Photo);
         maybe_field!(sticker, Sticker);
         maybe_field_with_caption_and_group!(video, Video);
+        maybe_field_with_caption_and_group!(animation, Animation);
         maybe_field!(voice, Voice);
         maybe_field!(video_note, VideoNote);
         maybe_field!(contact, Contact);
@@ -686,6 +702,9 @@ pub struct RawMessage {
     pub sticker: Option<Sticker>,
     /// Message is a video, information about the video.
     pub video: Option<Video>,
+    /// Message is a animation, information about the animation.
+    pub animation: Option<Animation>,
+
     /// Message is a voice message, information about the file.
     pub voice: Option<Voice>,
     /// Message is a video note message, information about the file.
@@ -1040,6 +1059,24 @@ pub struct Sticker {
 /// This object represents a video file.
 #[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
 pub struct Video {
+    /// Unique identifier for this file.
+    pub file_id: String,
+    /// Video width as defined by sender.
+    pub width: Integer,
+    /// Video height as defined by sender.
+    pub height: Integer,
+    /// Duration of the video in seconds as defined by sender.
+    pub duration: Integer,
+    /// Video thumbnail.
+    pub thumb: Option<PhotoSize>,
+    /// Mime type of a file as defined by sender.
+    pub mime_type: Option<String>,
+    /// File size.
+    pub file_size: Option<Integer>,
+}
+/// This object represents a video file.
+#[derive(Debug, Clone, PartialEq, PartialOrd, Deserialize)]
+pub struct Animation {
     /// Unique identifier for this file.
     pub file_id: String,
     /// Video width as defined by sender.

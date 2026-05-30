@@ -1,4 +1,4 @@
-use crate::{Audio, Channel, Chat, ChatId, Group, Integer, Message, RawChat, Supergroup, User};
+use crate::{Audio, Channel, Chat, ChatId, Group, Integer, Message, Supergroup, User};
 use serde::{Deserialize, Deserializer};
 
 // bak Eq, Ord, Hash
@@ -30,10 +30,10 @@ impl ChatFullInfo {
     pub fn is_bot(&self) -> bool {
         match *self {
             ChatFullInfo::Private(ref x) => x.is_bot,
-            ChatFullInfo::Group(ref x) => false,
-            ChatFullInfo::Supergroup(ref x) => false,
-            ChatFullInfo::Channel(ref x) => false,
-            ChatFullInfo::Unknown(ref x) => false,
+            ChatFullInfo::Group(_) => false,
+            ChatFullInfo::Supergroup(_) => false,
+            ChatFullInfo::Channel(_) => false,
+            ChatFullInfo::Unknown(_) => false,
         }
     }
     pub fn title(&self) -> String {
@@ -52,7 +52,7 @@ impl ChatFullInfo {
     pub fn user_name(&self) -> String {
         match *self {
             ChatFullInfo::Private(ref x) => x.username.clone().unwrap_or_default(),
-            ChatFullInfo::Group(ref x) => "".to_string(),
+            ChatFullInfo::Group(ref _x) => "".to_string(),
             ChatFullInfo::Supergroup(ref x) => x.username.clone().unwrap_or_default(),
             ChatFullInfo::Channel(ref x) => x.username.clone().unwrap_or_default(),
             ChatFullInfo::Unknown(ref x) => x.username.clone().unwrap_or_default(),
@@ -61,7 +61,7 @@ impl ChatFullInfo {
 
     pub fn is_channel(&self) -> bool {
         match &self {
-            ChatFullInfo::Channel(ref x) => true,
+            ChatFullInfo::Channel(_) => true,
             _ => false,
         }
     }

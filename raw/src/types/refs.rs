@@ -347,6 +347,7 @@ file_id_impls!(Audio);
 file_id_impls!(Document);
 file_id_impls!(Sticker);
 file_id_impls!(Video);
+file_id_impls!(Animation);
 file_id_impls!(Voice);
 file_id_impls!(VideoNote);
 

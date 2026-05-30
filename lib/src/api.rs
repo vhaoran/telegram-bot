@@ -7,6 +7,7 @@ use std::time::Duration;
 use futures::{Future, FutureExt};
 use log::debug;
 use tokio::time::timeout;
+#[allow(unused_imports)]
 use tracing_futures::Instrument;
 
 use telegram_bot_raw::{HttpRequest, Request, ResponseType};
@@ -193,7 +194,7 @@ impl Api {
             {
                 let a = http_response.clone();
                 let v = a.body.unwrap_or(Vec::new());
-                let body = match std::str::from_utf8(&v) {
+                let _body = match std::str::from_utf8(&v) {
                     Ok(str) => str,
                     Err(_) => "<invalid utf-8 string>",
                 };

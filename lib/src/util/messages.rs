@@ -46,6 +46,7 @@ impl MessageText for MessageKind {
             MessageKind::Photo { caption, .. } => caption.to_owned(),
             MessageKind::Sticker { .. } => None,
             MessageKind::Video { caption, .. } => caption.to_owned(),
+            MessageKind::Animation { caption, .. } => caption.to_owned(),
             MessageKind::Voice { .. } => None,
             MessageKind::VideoNote { .. } => None,
             MessageKind::Contact { data } => Some(data.first_name.to_owned()),
@@ -122,6 +123,14 @@ impl MessageGetFiles for MessageKind {
                 }
                 Some(files)
             }
+            MessageKind::Animation { data, .. } => {
+                let mut files = vec![data.get_file()];
+                if let Some(thumb) = &data.thumb {
+                    files.push(thumb.get_file());
+                }
+                Some(files)
+            }
+            
             MessageKind::Voice { data } => Some(vec![data.get_file()]),
             MessageKind::VideoNote { data, .. } => {
                 let mut files = vec![data.get_file()];
