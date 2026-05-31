@@ -236,8 +236,27 @@ impl From<Vec<Vec<InlineKeyboardButton>>> for InlineKeyboardMarkup {
 #[derive(Debug, Clone, PartialEq, PartialOrd, Serialize)]
 pub struct InlineKeyboardButton {
     text: String,
+    /// ptional. Style of the button.
+    /// Must be one of “danger” (red),
+    /// “success” (green) or
+    /// “primary” (blue).
+    /// If omitted, then an app-specific style is used.
+    style: Option<String>,
+
     #[serde(flatten)]
     kind: InlineKeyboardButtonKind,
+}
+
+impl InlineKeyboardButton {
+    /// danger/success/primary
+    pub fn style_(mut self, style: &str) -> Self {
+        const ALL: &str = "danger/success/primary";
+        if !style.is_empty() && !ALL.contains(style) {
+            return self;
+        }
+        self.style = Some(style.to_string());
+        self
+    }
 }
 
 impl InlineKeyboardButton {
@@ -245,6 +264,7 @@ impl InlineKeyboardButton {
     pub fn callback<T: AsRef<str>, C: AsRef<str>>(text: T, callback: C) -> Self {
         Self {
             text: text.as_ref().to_string(),
+            style: None,
             kind: InlineKeyboardButtonKind::CallbackData(callback.as_ref().to_string()),
         }
     }
@@ -253,6 +273,7 @@ impl InlineKeyboardButton {
     pub fn url<T: AsRef<str>, U: AsRef<str>>(text: T, url: U) -> Self {
         Self {
             text: text.as_ref().to_string(),
+            style: None,
             kind: InlineKeyboardButtonKind::Url(url.as_ref().to_string()),
         }
     }
@@ -263,6 +284,7 @@ impl InlineKeyboardButton {
     pub fn switch_inline_query<T: AsRef<str>, Q: AsRef<str>>(text: T, query: Q) -> Self {
         Self {
             text: text.as_ref().to_string(),
+            style: None,
             kind: InlineKeyboardButtonKind::SwitchInlineQuery(query.as_ref().to_string()),
         }
     }
@@ -275,6 +297,7 @@ impl InlineKeyboardButton {
         query: Q,
     ) -> Self {
         Self {
+            style: None,
             text: text.as_ref().to_string(),
             kind: InlineKeyboardButtonKind::SwitchInlineQueryCurrentChat(
                 query.as_ref().to_string(),
