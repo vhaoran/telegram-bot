@@ -853,7 +853,7 @@ impl<'de> Deserialize<'de> for MessageEntity {
             "text_link" => TextLink(required_field!(url)),
             "pre_code" => PreCode(required_field!(language)),
             "text_mention" => TextMention(required_field!(user)),
-            "custom_emoji_id" => CustomEmoji(required_field!(custom_emoji_id)),
+            "custom_emoji" => CustomEmoji(required_field!(custom_emoji_id)),
             "date_time" => DateTime {
                 unix_time: raw.unix_time.clone().unwrap_or_default(),
                 date_time_format: raw.date_time_format.clone(),
@@ -967,7 +967,7 @@ impl Serialize for MessageEntity {
             }
             MessageEntityKind::CustomEmoji(id) => {
                 state.serialize_field("type", "custom_emoji")?;
-                state.serialize_field("custom_emoji_id", &id)?;
+                state.serialize_field("custom_emoji_id", id.as_str())?;
                 state.end()
             }
             MessageEntityKind::DateTime {

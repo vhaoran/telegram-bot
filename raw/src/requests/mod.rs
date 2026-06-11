@@ -41,9 +41,11 @@ pub mod stop_poll;
 pub mod unban_chat_member;
 pub mod unpin_chat_message;
 mod copy_message;
+mod copy_messages;
 
 pub use self::_base::*;
 pub use self::copy_message::*;
+pub use self::copy_messages::*;
 pub use self::answer_callback_query::*;
 pub use self::answer_inline_query::*;
 pub use self::approve_chat_join_request::*;

@@ -12,6 +12,8 @@ pub struct CopyMessage {
     #[serde(skip_serializing_if = "Not::not")]
     disable_notification: bool,
     message_id: MessageId,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    reply_markup: Option<ReplyMarkup>,
 }
 
 #[derive(Debug, Clone, PartialEq, PartialOrd, Serialize, Deserialize)]
@@ -41,11 +43,20 @@ impl CopyMessage {
             from_chat_id: from.to_chat_ref(),
             disable_notification: false,
             message_id: message.to_message_id(),
+            reply_markup: None,
         }
     }
 
     pub fn disable_notification(&mut self) -> &mut Self {
         self.disable_notification = true;
+        self
+    }
+
+    pub fn reply_markup<R>(&mut self, reply_markup: R) -> &mut Self
+    where
+        R: Into<ReplyMarkup>,
+    {
+        self.reply_markup = Some(reply_markup.into());
         self
     }
 }

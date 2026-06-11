@@ -169,7 +169,7 @@ impl Api {
         let api = self.clone();
         let request = request.serialize();
 
-        debug!("--send_req: {request:#?}-------");
+        debug!("--bot_send_req: {request:#?}-------");
 
         async move {
             api.send_http_request::<Req::Response>(request.map_err(ErrorKind::from)?)
