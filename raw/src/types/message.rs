@@ -160,9 +160,6 @@ pub enum MessageKind {
         media_group_id: Option<String>,
     },
 
-
-
-
     /// Message is a voice message.
     Voice {
         /// Information about the file.
@@ -802,6 +799,12 @@ pub enum MessageEntityKind {
     //
     ExpandableBlockQuote,
     //
+    DateTime {
+        unix_time: Integer,
+        date_time_format: Option<String>,
+    },
+    CustomEmoji(String),
+    //
     #[doc(hidden)]
     Unknown(RawMessageEntity),
 }
@@ -817,7 +820,6 @@ impl<'de> Deserialize<'de> for MessageEntity {
 
         let offset = raw.offset;
         let length = raw.length;
-
 
         macro_rules! required_field {
             ($name:ident) => {{
@@ -851,6 +853,11 @@ impl<'de> Deserialize<'de> for MessageEntity {
             "text_link" => TextLink(required_field!(url)),
             "pre_code" => PreCode(required_field!(language)),
             "text_mention" => TextMention(required_field!(user)),
+            "custom_emoji_id" => CustomEmoji(required_field!(custom_emoji_id)),
+            "date_time" => DateTime {
+                unix_time: raw.unix_time.clone().unwrap_or_default(),
+                date_time_format: raw.date_time_format.clone(),
+            },
             _ => Unknown(raw),
         };
 
@@ -958,6 +965,20 @@ impl Serialize for MessageEntity {
                 state.serialize_field("user", &u)?;
                 state.end()
             }
+            MessageEntityKind::CustomEmoji(id) => {
+                state.serialize_field("type", "custom_emoji")?;
+                state.serialize_field("custom_emoji_id", &id)?;
+                state.end()
+            }
+            MessageEntityKind::DateTime {
+                unix_time,
+                date_time_format,
+            } => {
+                state.serialize_field("type", "date_time")?;
+                state.serialize_field("unix_time", &unix_time)?;
+                state.serialize_field("date_time_format", &date_time_format)?;
+                state.end()
+            }
 
             _ => {
                 state.serialize_field("unknow", &self.kind)?;
@@ -984,7 +1005,17 @@ pub struct RawMessageEntity {
     pub url: Option<String>,
     /// For “text_mention” only, the mentioned user.
     pub user: Option<User>,
-    //
+
+    /// For “custom_emoji” only, the custom emoji that was used.
+    pub custom_emoji_id: Option<String>,
+
+    /// unix_time	Integer	Optional. For “date_time” only, the Unix time associated with the entity
+    pub unix_time: Option<Integer>,
+    /// date_time_format	String	Optional.
+    /// For “date_time” only,
+    /// the string that defines the formatting of the date and time. See date-time entity formatting for more details.
+    pub date_time_format: Option<String>,
+
     //for pre_code/
     pub language: Option<String>,
 }
